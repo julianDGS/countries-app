@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PaisService } from '../../services/pais.service';
 import { Country } from '../../interfaces/pais.interface';
 
@@ -11,38 +11,44 @@ import { Country } from '../../interfaces/pais.interface';
     }
   `]
 })
-export class PorPaisComponent {
+export class PorPaisComponent implements OnInit{
 
-  termino: string = '';
-  isError: boolean = false;
-  countries: Country[]=[];
-  countriesSug: Country[]=[];
-  mostrarSugerencias: boolean = false;
+  // mostrarSugerencias: boolean = false;
+  // countriesSug: Country[]=[];
+  public termino: string = '';
+  public countries: Country[]=[];
+  public isLoading: boolean = false;
+  public initialValue: string = '';
 
-  constructor(private paisService: PaisService){};
+  constructor(private paisService: PaisService){}
+  
+  ngOnInit(): void {
+    this.countries = this.paisService.cacheStorage.porPais.paises;
+    this.initialValue = this.paisService.cacheStorage.porPais.term;
+  }
 
   buscar(termino: string){
-    this.isError = false;
-    this.mostrarSugerencias = false;
+    // this.mostrarSugerencias = false;
+    this.isLoading = true;
     this.termino = termino;
     this.paisService.buscarPais(termino, 'name').subscribe(
       {
-        next: (resp) => this.countries = resp,
-        error: () => {this.countries = []; this.isError = true}
+        next: (countries) => {
+          this.countries = countries;
+          this.isLoading = false;
+        }
       }
     );
   }
 
-  sugerencias(partialTermino: any){
-    this.isError = false;
-    this.mostrarSugerencias = true;
-    this.termino = partialTermino
-    this.paisService.buscarPais(partialTermino, 'name').subscribe(
-      {
-        next: (resp) => this.countriesSug = resp.splice(0, 5),
-        error: () => {this.countriesSug = []; this.isError = true}
-      }
-    );
-  }
+  // sugerencias(partialTermino: any){
+  //   this.mostrarSugerencias = true;
+  //   this.termino = partialTermino
+  //   this.paisService.buscarPais(partialTermino, 'name').subscribe(
+  //     {
+  //       next: (resp) => this.countriesSug = resp.splice(0, 5),
+  //     }
+  //   );
+  // }
 
 }

@@ -4,12 +4,12 @@
         <div class="col">
             <app-input
                 placeholder="Buscar país..."
-                (onEnter)="buscar($event)"
-                (onDebounce)="sugerencias($event)"
+                (onDebounce)="buscar($event)"
+                [initialValue]="initialValue"
             ></app-input>
         </div>
     </div>
-    <ul class="list-group" *ngIf="mostrarSugerencias">
+    <!-- <ul class="list-group" *ngIf="mostrarSugerencias">
         <li 
             *ngFor="let country of countriesSug"
             class="list-group-item list-group-item-action"
@@ -26,12 +26,12 @@
             >
             Buscar "{{ termino }}"
         </li>
-    </ul>
-    <hr>
-    <div class="alert alert-danger" *ngIf="isError">No se encontró país asociado a {{termino}}</div>
-    <div *ngIf="countries.length > 0" class="row">
-        <div class="col">
-            <app-tabla [countries]="countries"></app-tabla>
-        </div>
+    </ul> -->
+</div>
+<div class="row">
+    <div class="col">
+        <hr>
+        <shared-loading-spinner *ngIf="isLoading"></shared-loading-spinner>
+        <app-tabla [countries]="countries"></app-tabla>
     </div>
 </div>

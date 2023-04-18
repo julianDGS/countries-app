@@ -1,9 +1,9 @@
 <div class="animate__animated animate__fadeIn">
-    <div *ngIf="!pais; else divPais" 
+    <ng-template #noCountry> 
         class="alert alert-info">
         Espere por favor...
-    </div>
-    <ng-template #divPais>
+    </ng-template>
+    <div *ngIf="pais; else noCountry">
         <div class="row">
             <div class="col-12">
                 <h1>País: <small>{{ pais.name.common }}</small></h1>
@@ -49,5 +49,5 @@
             {{ pais | json }}
         </pre> -->
     
-    </ng-template>
+    </div>
 </div>

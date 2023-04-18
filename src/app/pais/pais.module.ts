@@ -8,6 +8,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TablaComponent } from './components/tabla/tabla.component';
 import { InputComponent } from './components/input/input.component';
+import { PaisRoutingModule } from './pais-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -20,17 +22,11 @@ import { InputComponent } from './components/input/input.component';
     TablaComponent,
     InputComponent
   ],
-  exports: [
-    PorCapitalComponent,
-    PorPaisComponent,
-    PorRegionComponent,
-    VerPaisComponent
-  ],
-
   imports: [
     CommonModule,
-    RouterModule,
-    FormsModule
+    FormsModule,
+    PaisRoutingModule,
+    SharedModule
   ]
 })
 export class PaisModule { }

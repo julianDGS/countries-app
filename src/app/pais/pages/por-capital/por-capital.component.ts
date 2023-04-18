@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Country } from '../../interfaces/pais.interface';
 import { PaisService } from '../../services/pais.service';
 
@@ -6,27 +6,30 @@ import { PaisService } from '../../services/pais.service';
   selector: 'app-por-capital',
   templateUrl: './por-capital.component.html'
 })
-export class PorCapitalComponent {
+export class PorCapitalComponent implements OnInit {
   
-  termino: string = '';
-  isError: boolean = false;
-  countries: Country[]=[];
+  public termino: string = '';
+  public countries: Country[]=[];
+  public isLoading = false;
+  public initialValue: string = '';
 
   constructor(private paisService: PaisService){};
 
-  buscar(termino: string){
-    this.isError = false;
-    this.termino = termino;
-    this.paisService.buscarPais(termino, 'capital').subscribe(
-      {
-        next: (resp) => this.countries = resp,
-        error: () => {this.countries = []; this.isError = true}
-      }
-    );
+  ngOnInit(): void {
+    this.countries = this.paisService.cacheStorage.porCapital.paises;
+    this.initialValue = this.paisService.cacheStorage.porCapital.term;
   }
 
-  sugerencias(partialTermino: any){
-    this.isError = false;
-    // TODO: crear sugerencias
+  buscar(termino: string){
+    this.termino = termino;
+    this.isLoading = true;
+    this.paisService.buscarPais(termino, 'capital').subscribe(
+      {
+        next: (resp) => {
+          this.countries = resp;
+          this.isLoading = false;
+      }
+      }
+    );
   }
 }

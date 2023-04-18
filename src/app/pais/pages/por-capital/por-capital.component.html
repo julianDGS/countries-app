@@ -4,16 +4,14 @@
         <div class="col">
             <app-input
                 placeholder="Buscar capital..."
-                (onEnter)="buscar($event)"
-                (onDebounce)="sugerencias($event)"
+                (onDebounce)="buscar($event)"
+                [initialValue]="initialValue"
             ></app-input>
         </div>
     </div>
     <hr>
-    <div class="alert alert-danger" *ngIf="isError">No se encontró país asociado a {{termino}}</div>
-    <div *ngIf="countries.length > 0" class="row">
-        <div class="col">
-            <app-tabla [countries]="countries"></app-tabla>
-        </div>
-    </div>
+</div>
+<div class="col">
+    <shared-loading-spinner *ngIf="isLoading"></shared-loading-spinner>
+    <app-tabla [countries]="countries"></app-tabla>
 </div>

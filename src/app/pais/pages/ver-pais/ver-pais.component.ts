@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PaisService } from '../../services/pais.service';
 import { Country } from '../../interfaces/pais.interface';
 import { switchMap, tap } from 'rxjs/operators';
@@ -10,9 +10,9 @@ import { switchMap, tap } from 'rxjs/operators';
 })
 export class VerPaisComponent implements OnInit {
 
-  pais!: Country;
+  pais?: Country;
 
-  constructor(private activatedRoute: ActivatedRoute, private paisService: PaisService){
+  constructor(private activatedRoute: ActivatedRoute, private paisService: PaisService, private router: Router){
   }
 
   ngOnInit(): void {
@@ -21,8 +21,11 @@ export class VerPaisComponent implements OnInit {
         switchMap(({id})=> this.paisService.getPaisPorCca2(id) ),
         tap(console.log)
       )
-      .subscribe(paisArr => {
-        this.pais = paisArr[0]
+      .subscribe( pais => {
+        if(!pais){
+          return this.router.navigateByUrl('');
+        }
+        return this.pais = pais
       });
 
       /*Este codigo hace lo mismo que el de arriba */

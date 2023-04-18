@@ -1,26 +1,33 @@
-import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
-import { debounceTime, Subject } from 'rxjs';
+import { Component, Output, EventEmitter, OnInit, Input, OnDestroy } from '@angular/core';
+import { debounceTime, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html'
 })
-export class InputComponent implements OnInit{
+export class InputComponent implements OnInit, OnDestroy{
   
-  @Input() placeholder: string ='';
-  @Output() onEnter   : EventEmitter<string> = new EventEmitter;
-  @Output() onDebounce: EventEmitter<string> = new EventEmitter;
+  @Input() public placeholder: string ='';
+  @Input() public initialValue: string='';
+  @Output() public onEnter   : EventEmitter<string> = new EventEmitter;
+  @Output() public onDebounce: EventEmitter<string> = new EventEmitter;
   
-  debouncer: Subject<string> = new Subject();
+  private debouncer: Subject<string> = new Subject();
+  private debouncerSuscription?: Subscription;
   
   termino: string ='';
   
   ngOnInit(): void {
-    this.debouncer
-      .pipe(debounceTime(300))
-      .subscribe(valor => {
-        this.onDebounce.emit(valor);
-      });
+    this.termino = this.initialValue
+    this.debouncerSuscription = this.debouncer
+    .pipe(debounceTime(300))
+    .subscribe(valor => {
+      this.onDebounce.emit(valor);
+    });
+  }
+  
+  ngOnDestroy(): void {
+    this.debouncerSuscription?.unsubscribe();
   }
 
   buscar(){
@@ -30,4 +37,7 @@ export class InputComponent implements OnInit{
   teclaPresionada(){
     this.debouncer.next(this.termino);
   }
+
+
+
 }
